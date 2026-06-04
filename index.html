@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en, fr, viet">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💕 For the You the Girl I love 💕</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: linear-gradient(180deg,#ffd6e7 0%,#ffb3d1 30%,#ff85b3 60%,#e8608a 100%);
+    min-height:100vh; overflow:hidden; font-family:'Georgia',serif;
+  }
+  #scene { position:relative; width:100%; height:100vh; overflow:hidden; }
+
+  /* CLOUDS */
+  .cloud { position:absolute; background:rgba(255,255,255,0.6); border-radius:50px; animation:floatCloud linear infinite; }
+  .cloud::before,.cloud::after { content:''; position:absolute; background:rgba(255,255,255,0.6); border-radius:50%; }
+  .cloud::before { width:60%; height:180%; top:-50%; left:15%; }
+  .cloud::after  { width:45%; height:140%; top:-30%; right:15%; }
+  @keyframes floatCloud { from{transform:translateX(-200px)} to{transform:translateX(110vw)} }
+
+  /* HEARTS */
+  .heart { position:absolute; top:-40px; animation:fallHeart linear infinite; opacity:0.7; }
+  @keyframes fallHeart { 0%{transform:translateY(0) rotate(0deg);opacity:0.8} 100%{transform:translateY(110vh) rotate(360deg);opacity:0} }
+
+  /* SPARKLES */
+  .sparkle { position:absolute; background:#fff; border-radius:50%; animation:sparkleAnim ease-in-out infinite; }
+  @keyframes sparkleAnim { 0%,100%{transform:scale(0);opacity:0} 50%{transform:scale(1);opacity:1} }
+
+  /* GROUND */
+  #ground { position:absolute; bottom:0; width:100%; height:22%;
+    background:linear-gradient(180deg,#a8e063 0%,#56ab2f 100%);
+    border-radius:60% 60% 0 0 / 30% 30% 0 0; }
+
+  /* TULIPS */
+  .tulip { position:absolute; bottom:18%; display:flex; flex-direction:column; align-items:center;
+    animation:sway ease-in-out infinite; transform-origin:bottom center; }
+  @keyframes sway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+
+  /* TITLE */
+  #title { position:absolute; top:5%; width:100%; text-align:center; color:#fff;
+    text-shadow:0 2px 12px rgba(180,0,80,0.4); animation:titleFloat ease-in-out 3s infinite; z-index:50; }
+  #title h1 { font-size:clamp(22px,5vw,42px); letter-spacing:2px; }
+  #title p  { font-size:clamp(12px,2.5vw,20px); margin-top:6px; opacity:0.9; }
+  @keyframes titleFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* ANIMALS */
+  .animal-container { position:absolute; bottom:19%; display:flex; flex-direction:column;
+    align-items:center; animation:bounce ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .animal-label { font-size:11px; color:#fff; font-family:Georgia; margin-top:4px;
+    text-shadow:0 1px 4px rgba(0,0,0,0.3); white-space:nowrap; }
+  svg.animal { overflow:visible; }
+
+  /* GOOSE — controlled entirely by JS requestAnimationFrame */
+  #goose { position:absolute; }
+  .wing-top { transform-origin:28px 22px; animation:flapWing ease-in-out 0.38s infinite alternate; }
+  .wing-bot { transform-origin:28px 32px; animation:flapWingBot ease-in-out 0.38s infinite alternate; }
+  @keyframes flapWing    { from{transform:rotate(-35deg)} to{transform:rotate(25deg)} }
+  @keyframes flapWingBot { from{transform:rotate(10deg)}  to{transform:rotate(-20deg)} }
+
+  /* RAINBOW */
+  #rainbow { position:absolute; top:10%; left:50%; transform:translateX(-50%); opacity:0.35; }
+
+  /* MUSIC BTN */
+  #music-btn { position:fixed; top:14px; right:14px;
+    background:rgba(255,255,255,0.3); border:2px solid rgba(255,255,255,0.7);
+    border-radius:50%; width:50px; height:50px; font-size:22px; cursor:pointer;
+    z-index:999; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+  #music-btn:hover { background:rgba(255,255,255,0.5); }
+
+  /* LYRICS TICKER */
+  #lyrics-bar {
+    position:fixed; bottom:0; left:0; right:0;
+    background:rgba(255, 20, 147, 0.55);
+    backdrop-filter:blur(6px);
+    border-top:2px solid rgba(255,255,255,0.5);
+    padding:10px 0;
+    z-index:100;
+    overflow:hidden;
+    height:44px;
+  }
+  #lyrics-track {
+    display:inline-block;
+    white-space:nowrap;
+    font-size:18px;
+    color:#fff;
+    text-shadow:0 1px 6px rgba(120,0,60,0.5);
+    letter-spacing:1px;
+    font-family:'Georgia',serif;
+    animation:scrollLyrics linear infinite;
+  }
+  @keyframes scrollLyrics {
+    0%   { transform:translateX(100vw); }
+    100% { transform:translateX(-100%); }
+  }
+</style>
+</head>
+<body>
+<div id="scene">
+
+  <svg id="rainbow" width="500" height="220" viewBox="0 0 500 220">
+    <path d="M10,210 Q250,-60 490,210" fill="none" stroke="#ff0080" stroke-width="14" opacity="0.5"/>
+    <path d="M25,210 Q250,-35 475,210" fill="none" stroke="#ff6600" stroke-width="10" opacity="0.5"/>
+    <path d="M40,210 Q250,-12 460,210" fill="none" stroke="#ffcc00" stroke-width="10" opacity="0.5"/>
+    <path d="M55,210 Q250,8 445,210"   fill="none" stroke="#66cc00" stroke-width="10" opacity="0.5"/>
+    <path d="M70,210 Q250,25 430,210"  fill="none" stroke="#0099ff" stroke-width="10" opacity="0.5"/>
+    <path d="M85,210 Q250,38 415,210"  fill="none" stroke="#9900ff" stroke-width="10" opacity="0.5"/>
+  </svg>
+
+  <div id="title">
+    <h1>💕 For the You the Girl I love 💕</h1>
+    <p>A small garden just for you</p>
+  </div>
+
+  <!-- GOOSE SVG — realistic bird, wings flap, JS moves it smoothly -->
+  <svg id="goose" width="110" height="70" viewBox="0 0 110 70" style="top:18%">
+    <!-- tail feathers -->
+    <path d="M90,38 Q108,30 106,42 Q108,50 90,46 Z" fill="#e8e0cc"/>
+    <!-- body -->
+    <ellipse cx="55" cy="40" rx="34" ry="18" fill="#f5f0e8"/>
+    <!-- body shading -->
+    <ellipse cx="55" cy="44" rx="28" ry="10" fill="#e8e2d4" opacity="0.5"/>
+    <!-- wing top (flaps up) -->
+    <g class="wing-top">
+      <path d="M28,34 Q50,10 78,26 Q60,30 28,34Z" fill="#ddd5c0"/>
+      <path d="M32,34 Q52,14 74,28" fill="none" stroke="#c8bfa8" stroke-width="1.5"/>
+    </g>
+    <!-- wing bottom shadow -->
+    <g class="wing-bot">
+      <path d="M30,42 Q55,52 80,42 Q60,46 30,42Z" fill="#ccc5b0" opacity="0.7"/>
+    </g>
+    <!-- neck -->
+    <path d="M28,36 Q16,22 18,10" stroke="#d4c9b0" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M28,36 Q16,22 18,10" stroke="#e8e0cc" stroke-width="7"  fill="none" stroke-linecap="round"/>
+    <!-- head -->
+    <ellipse cx="18" cy="8" rx="11" ry="9" fill="#d4c9b0"/>
+    <!-- head highlight -->
+    <ellipse cx="16" cy="6" rx="5" ry="4" fill="#e8e0cc" opacity="0.5"/>
+    <!-- eye -->
+    <circle cx="14" cy="7" r="3" fill="#222"/>
+    <circle cx="13" cy="6" r="1.2" fill="#fff"/>
+    <!-- beak -->
+    <path d="M8,7 L0,9 L8,12 Q12,10 8,7Z" fill="#f0a030"/>
+    <path d="M8,9 L3,9" stroke="#c07818" stroke-width="0.8"/>
+    <!-- feet hint -->
+    <path d="M44,56 Q40,64 36,66 M44,56 Q44,65 48,67 M44,56 Q48,64 52,65" stroke="#f0a030" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+    <path d="M62,56 Q58,64 54,66 M62,56 Q62,65 66,67 M62,56 Q66,64 70,65" stroke="#f0a030" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+  </svg>
+
+  <div id="ground"></div>
+  <div id="animals-layer"></div>
+  <div id="tulips-layer"></div>
+
+  <button id="music-btn" title="Musique">🔊
+    <h3 style="position:absolute;bottom: -25px;left:50%;transform:translateX(-50%);font-size:10px;color:#fff;opacity:0.8;">click me</h3>
+  </button>
+  <audio id="song" src="hooligan. - To The Moon.mp3" preload="auto"></audio>
+</div>
+
+<!-- LYRICS BAR -->
+<div id="lyrics-bar">
+  <span id="lyrics-track"></span></div>
+
+<script>
+const scene = document.getElementById('scene');
+
+// CLOUDS
+for(let i=0;i<5;i++){
+  const c=document.createElement('div'); c.className='cloud';
+  const w=80+Math.random()*100;
+  c.style.cssText=`width:${w}px;height:${w*0.4}px;top:${5+Math.random()*25}%;animation-duration:${20+Math.random()*25}s;animation-delay:${-Math.random()*30}s;opacity:${0.4+Math.random()*0.3}`;
+  scene.appendChild(c);
+}
+
+// HEARTS
+const hc=['❤','💕','💗','💖','🌸'];
+for(let i=0;i<18;i++){
+  const h=document.createElement('div'); h.className='heart';
+  h.textContent=hc[Math.floor(Math.random()*hc.length)];
+  h.style.cssText=`left:${Math.random()*100}%;font-size:${12+Math.random()*16}px;animation-duration:${5+Math.random()*8}s;animation-delay:${-Math.random()*10}s;`;
+  scene.appendChild(h);
+}
+
+// SPARKLES
+for(let i=0;i<25;i++){
+  const s=document.createElement('div'); s.className='sparkle';
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*80}%;animation-duration:${1+Math.random()*2}s;animation-delay:${-Math.random()*3}s;width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;`;
+  scene.appendChild(s);
+}
+
+// TULIPS
+function makeTulip(x,c1,c2,c3,delay,sh){
+  const div=document.createElement('div'); div.className='tulip';
+  div.style.cssText=`left:${x}%;animation-duration:${2+Math.random()*1.5}s;animation-delay:${delay}s;`;
+  const h=sh+55;
+  div.innerHTML=`<svg width="40" height="${h}" viewBox="0 0 40 ${h}" overflow="visible" style="overflow:visible">
+    <rect x="18" y="40" width="4" height="${sh}" rx="2" fill="#3a7d44"/>
+    <ellipse cx="12" cy="${40+sh*0.4}" rx="12" ry="5" fill="#4a9a55" transform="rotate(-30,12,${40+sh*0.4})"/>
+    <ellipse cx="28" cy="${40+sh*0.55}" rx="12" ry="5" fill="#4a9a55" transform="rotate(30,28,${40+sh*0.55})"/>
+    <ellipse cx="20" cy="30" rx="10" ry="16" fill="${c1}" opacity="0.9"/>
+    <ellipse cx="20" cy="30" rx="10" ry="16" fill="${c1}" transform="rotate(72,20,30)" opacity="0.85"/>
+    <ellipse cx="20" cy="30" rx="10" ry="16" fill="${c2}" transform="rotate(144,20,30)" opacity="0.85"/>
+    <ellipse cx="20" cy="30" rx="10" ry="16" fill="${c2}" transform="rotate(216,20,30)" opacity="0.85"/>
+    <ellipse cx="20" cy="30" rx="10" ry="16" fill="${c3}" transform="rotate(288,20,30)" opacity="0.9"/>
+    <ellipse cx="20" cy="26" rx="5" ry="6" fill="${c3}" opacity="0.6"/>
+    <ellipse cx="20" cy="25" rx="3" ry="4" fill="#fff" opacity="0.4"/>
+  </svg>`;
+  return div;
+}
+const TL=document.getElementById('tulips-layer');
+[[5,'#ff69b4','#ff1493','#ff85c0',-0.3,55],[10,'#ff85b3','#ff3399','#ffb3d4',-0.7,60],
+ [16,'#ff1493','#ff69b4','#e91e8c',0,50],[22,'#ff69b4','#ff85b3','#ff3399',0.4,65],
+ [72,'#ffb3d4','#ff3399','#ff69b4',-0.2,52],[78,'#ff1493','#ff85b3','#ffb3d4',0.5,58],
+ [84,'#ff85b3','#ff1493','#ff69b4',-0.5,62],[90,'#ff69b4','#ffb3d4','#ff3399',0.2,54],
+ [95,'#ff3399','#ff69b4','#ff1493',-0.8,60]
+].forEach(d=>TL.appendChild(makeTulip(...d)));
+
+// ANIMALS (no dog)
+function pandaSVG(){return`<svg class="animal" width="70" height="80" viewBox="0 0 70 80">
+  <circle cx="15" cy="18" r="12" fill="#222"/><circle cx="55" cy="18" r="12" fill="#222"/>
+  <circle cx="15" cy="18" r="7" fill="#444"/><circle cx="55" cy="18" r="7" fill="#444"/>
+  <ellipse cx="35" cy="35" rx="26" ry="24" fill="#f5f5f5"/>
+  <ellipse cx="23" cy="32" rx="9" ry="8" fill="#222"/><ellipse cx="47" cy="32" rx="9" ry="8" fill="#222"/>
+  <circle cx="23" cy="32" r="4" fill="#fff"/><circle cx="47" cy="32" r="4" fill="#fff"/>
+  <circle cx="24" cy="31" r="2.5" fill="#111"/><circle cx="48" cy="31" r="2.5" fill="#111"/>
+  <circle cx="25" cy="30" r="1" fill="#fff"/><circle cx="49" cy="30" r="1" fill="#fff"/>
+  <ellipse cx="35" cy="42" rx="5" ry="3.5" fill="#ffb3c6"/>
+  <path d="M30,46 Q35,51 40,46" fill="none" stroke="#cc6680" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="18" cy="44" r="6" fill="#ffcce0" opacity="0.5"/>
+  <circle cx="52" cy="44" r="6" fill="#ffcce0" opacity="0.5"/>
+  <ellipse cx="35" cy="68" rx="20" ry="16" fill="#f0f0f0"/>
+  <text x="52" y="16" font-size="14">🌸</text>
+</svg>`;}
+function rabbitSVG(){return`<svg class="animal" width="65" height="90" viewBox="0 0 65 90">
+  <ellipse cx="22" cy="18" rx="8" ry="22" fill="#f8c8d8"/><ellipse cx="43" cy="18" rx="8" ry="22" fill="#f8c8d8"/>
+  <ellipse cx="22" cy="18" rx="4" ry="17" fill="#ffb3c8"/><ellipse cx="43" cy="18" rx="4" ry="17" fill="#ffb3c8"/>
+  <ellipse cx="32" cy="42" rx="22" ry="20" fill="#fce4ec"/>
+  <circle cx="24" cy="39" r="5" fill="#fff"/><circle cx="40" cy="39" r="5" fill="#fff"/>
+  <circle cx="24" cy="39" r="3" fill="#88ccff"/><circle cx="40" cy="39" r="3" fill="#88ccff"/>
+  <circle cx="24" cy="39" r="1.5" fill="#111"/><circle cx="40" cy="39" r="1.5" fill="#111"/>
+  <circle cx="25" cy="38" r="0.8" fill="#fff"/><circle cx="41" cy="38" r="0.8" fill="#fff"/>
+  <ellipse cx="32" cy="47" rx="4" ry="3" fill="#ff80aa"/>
+  <path d="M28,50 Q32,55 36,50" fill="none" stroke="#cc4477" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="19" cy="48" r="5" fill="#ffaacc" opacity="0.5"/>
+  <circle cx="45" cy="48" r="5" fill="#ffaacc" opacity="0.5"/>
+  <text x="38" y="38" font-size="12">🎀</text>
+  <ellipse cx="32" cy="73" rx="18" ry="16" fill="#fce4ec"/>
+  <circle cx="48" cy="72" r="7" fill="#fff"/>
+</svg>`;}
+function penguinSVG(){return`<svg class="animal" width="65" height="85" viewBox="0 0 65 85">
+  <ellipse cx="32" cy="58" rx="22" ry="26" fill="#1a1a2e"/>
+  <ellipse cx="32" cy="62" rx="14" ry="18" fill="#f5f0ff"/>
+  <circle cx="32" cy="28" r="20" fill="#1a1a2e"/>
+  <ellipse cx="32" cy="30" rx="12" ry="11" fill="#f5f0ff"/>
+  <circle cx="27" cy="26" r="5" fill="#fff"/><circle cx="37" cy="26" r="5" fill="#fff"/>
+  <circle cx="27" cy="26" r="3" fill="#222"/><circle cx="37" cy="26" r="3" fill="#222"/>
+  <circle cx="28" cy="25" r="1.2" fill="#fff"/><circle cx="38" cy="25" r="1.2" fill="#fff"/>
+  <polygon points="32,34 27,40 37,40" fill="#ffaa00"/>
+  <circle cx="21" cy="33" r="5" fill="#ffccdd" opacity="0.6"/>
+  <circle cx="43" cy="33" r="5" fill="#ffccdd" opacity="0.6"/>
+  <ellipse cx="12" cy="58" rx="7" ry="18" fill="#1a1a2e" transform="rotate(-15,12,58)"/>
+  <ellipse cx="52" cy="58" rx="7" ry="18" fill="#1a1a2e" transform="rotate(15,52,58)"/>
+  <path d="M12,42 Q32,52 52,42" stroke="#ff69b4" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M12,46 Q32,56 52,46" stroke="#ff3399" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="24" cy="82" rx="8" ry="4" fill="#ffaa00"/>
+  <ellipse cx="40" cy="82" rx="8" ry="4" fill="#ffaa00"/>
+  <text x="22" y="10" font-size="14">👑</text>
+</svg>`;}
+function catSVG(){return`<svg class="animal" width="70" height="85" viewBox="0 0 70 85">
+  <polygon points="12,22 5,2 25,18" fill="#ff69b4"/>
+  <polygon points="58,22 65,2 45,18" fill="#ff69b4"/>
+  <polygon points="14,20 9,6 23,17" fill="#ffb3cc"/>
+  <polygon points="56,20 61,6 47,17" fill="#ffb3cc"/>
+  <ellipse cx="35" cy="36" rx="26" ry="24" fill="#fff0f5"/>
+  <ellipse cx="25" cy="32" rx="7" ry="7" fill="#fff"/><ellipse cx="45" cy="32" rx="7" ry="7" fill="#fff"/>
+  <ellipse cx="25" cy="32" rx="4" ry="5" fill="#66bb6a"/><ellipse cx="45" cy="32" rx="4" ry="5" fill="#66bb6a"/>
+  <ellipse cx="25" cy="32" rx="2" ry="4" fill="#111"/><ellipse cx="45" cy="32" rx="2" ry="4" fill="#111"/>
+  <circle cx="26" cy="31" r="1" fill="#fff"/><circle cx="46" cy="31" r="1" fill="#fff"/>
+  <polygon points="35,42 32,46 38,46" fill="#ff80aa"/>
+  <path d="M30,47 Q35,52 40,47" fill="none" stroke="#cc4477" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="10" y1="43" x2="28" y2="44" stroke="#bbb" stroke-width="1"/>
+  <line x1="10" y1="47" x2="28" y2="46" stroke="#bbb" stroke-width="1"/>
+  <line x1="42" y1="44" x2="60" y2="43" stroke="#bbb" stroke-width="1"/>
+  <line x1="42" y1="46" x2="60" y2="47" stroke="#bbb" stroke-width="1"/>
+  <circle cx="20" cy="45" r="6" fill="#ffb3cc" opacity="0.5"/>
+  <circle cx="50" cy="45" r="6" fill="#ffb3cc" opacity="0.5"/>
+  <ellipse cx="35" cy="70" rx="19" ry="17" fill="#fff0f5"/>
+  <path d="M54,72 Q70,58 65,78" stroke="#ff69b4" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M17,54 Q35,62 53,54" stroke="#ff3399" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="60" r="4" fill="#ffd700"/>
+</svg>`;}
+
+const animals=[
+  {x:28,delay:0,  label:'🐼 Panda',   svg:pandaSVG()  },
+  {x:40,delay:0.3,label:'🐰 Rabbit',   svg:rabbitSVG() },
+  {x:52,delay:0.6,label:'🐧 Penguin',svg:penguinSVG()},
+  {x:64,delay:0.9,label:'🐱 Cat',    svg:catSVG()    },
+];
+const AL=document.getElementById('animals-layer');
+animals.forEach(a=>{
+  const div=document.createElement('div'); div.className='animal-container';
+  div.style.cssText=`left:${a.x}%;animation-duration:${1.8+Math.random()*1}s;animation-delay:${a.delay}s;`;
+  div.innerHTML=a.svg+`<span class="animal-label">${a.label}</span>`;
+  AL.appendChild(div);
+});
+
+// GOOSE SMOOTH FLIGHT via requestAnimationFrame
+const gooseEl = document.getElementById('goose');
+const GOOSE_W = 110;
+let gooseX = -GOOSE_W;
+let gooseDir = 1; // 1=right, -1=left
+const GOOSE_SPEED = 0.5; // px per frame
+
+function animateGoose(){
+  gooseX += GOOSE_SPEED * gooseDir;
+  const vw = window.innerWidth;
+  if(gooseDir === 1 && gooseX > vw + 20){
+    gooseDir = -1;
+    gooseX = vw + 20;
+  } else if(gooseDir === -1 && gooseX < -GOOSE_W - 20){
+    gooseDir = 1;
+    gooseX = -GOOSE_W - 20;
+  }
+  gooseEl.style.left = gooseX + 'px';
+  // flip horizontally based on direction
+  gooseEl.style.transform = gooseDir === -1 ? 'scaleX(-1)' : 'scaleX(1)';
+  requestAnimationFrame(animateGoose);
+}
+animateGoose();
+
+// LYRICS
+const lyrics = [
+  "💕 You are my flower, my pink tulip 🌷",
+  "🌸 Each morning with you is a new magic",
+  "🐼 The panda says: you are the most beautiful in the garden!",
+  "🐰 The rabbit jumps with joy just thinking of you",
+  "🐧 The penguin dances for you under the pink stars",
+  "🐱 The little cat purrs your name gently",
+  "🪿The white goose flies toward you through the pink sky, pov it don't know how to fly correctly",
+  "💖 I love you more than all the petals of all the flowers",
+  "✨ You illuminate my life like the sun illuminates the garden",
+  "🌷 For you, each tulip blooms, each heart beats stronger",
+  "💝 You are my rainbow, my melody, my eternity",
+  "🌸 In this enchanted garden, everything sings your name, my love",
+  "🫠 My such an american",
+  "ton manque de confiance en toi est trop mignon, pourtant tu es exceptionnel et j'aimerais pouvoir te le dire tous les jours pour que tu y crois un peu plus, parce que tu es vraiment incroyable et tu mérites de te sentir comme la reine du monde à chaque instant 💕",
+  "Cách bạn quan tâm đến những người xung quanh thật đáng ngưỡng mộ.",
+  "Nụ cười của bạn có sức ảnh hưởng lớn hơn bạn nghĩ.",
+  "there is a lot to say but words are not enough, so I will just say: Your the best, and I hope this little garden makes you smile every time you see it 💕",
+];
+
+const lyricsTrack = document.getElementById('lyrics-track');
+let lyricsText = lyrics.join('   ✿   ') + '   ✿   ';
+lyricsTrack.textContent = lyricsText;
+
+// Compute animation duration based on text length (approx 80px/s)
+function setLyricsDuration(){
+  const textWidth = lyricsTrack.scrollWidth;
+  const vw = window.innerWidth;
+  const duration = (textWidth + vw) / 80;
+  lyricsTrack.style.animationDuration = duration + 's';
+}
+setLyricsDuration();
+window.addEventListener('resize', setLyricsDuration);
+
+// MUSIC — use the provided MP3 audio file
+const song = document.getElementById('song');
+let playing = false;
+
+function startMusic(){
+  song.play();
+  playing = true;
+  document.getElementById('music-btn').textContent = '🔊';
+}
+
+function stopMusic(){
+  song.pause();
+  playing = false;
+  document.getElementById('music-btn').textContent = '🎵';
+}
+
+document.getElementById('music-btn').addEventListener('click', ()=>{
+  if (playing) stopMusic();
+  else startMusic();
+});
+</script>
+</body>
+</html>
